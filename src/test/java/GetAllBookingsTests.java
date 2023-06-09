@@ -13,7 +13,7 @@ public class GetAllBookingsTests {
                 .when()//burdan sonra url ve method u belirtiyoruz
                 .get("https://restful-booker.herokuapp.com/booking")
                 .then()
-                .log().all()
-                .statusCode(200);
+                .log().all()//response yi console yazdırma
+                .statusCode(200);//cevabı kontrol ediyoruz
     }
 }
