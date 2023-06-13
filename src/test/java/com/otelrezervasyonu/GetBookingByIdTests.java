@@ -13,13 +13,10 @@ public class GetBookingByIdTests extends BaseTest{
     @Test
     public void getBookingById(){
 
-        Response newBooking=createBooking();
-        int reservationId=newBooking.jsonPath().getJsonObject("bookingid");
-
 
         Response response=given()
                 .when()
-                .get("https://restful-booker.herokuapp.com/booking/203"+reservationId);//buraya kadar olan kısım response kısmı
+                .get("https://restful-booker.herokuapp.com/booking/203"+createBookingId());//buraya kadar olan kısım response kısmı
 
         response.then()
                 .statusCode(200);

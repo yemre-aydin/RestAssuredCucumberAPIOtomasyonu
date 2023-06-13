@@ -10,11 +10,15 @@ import static io.restassured.RestAssured.given;
 
 public class BaseTest {
 
+    protected int createBookingId(){
+        Response response=createBooking();
+        return response.jsonPath().getJsonObject("bookingid");
+    }
     protected Response createBooking(){
         Response response=given()
                 .when()
                 .contentType(ContentType.JSON)
-                .body(bookingObject())//json tipini string e çevirmek
+                .body(bookingObject("Yunus Emre","Aydın",200,true))//json tipini string e çevirmek
                 .post("https://restful-booker.herokuapp.com/booking");
 
         response.prettyPrint();
@@ -26,12 +30,13 @@ public class BaseTest {
 
     }
 
-    protected String bookingObject(){
+
+    protected String bookingObject(String firstName,String lastName,int totalPrice,boolean depositPaid){
         JSONObject body=new JSONObject();//body içinde istenilen alanlar tanımlanabilir
-        body.put("firstname","Yunus Emre");
-        body.put("lastname","Aydın");
-        body.put("totalprice",200);
-        body.put("depositpaid",true);
+        body.put("firstname",firstName);
+        body.put("lastname",lastName);
+        body.put("totalprice",totalPrice);
+        body.put("depositpaid",depositPaid);
 
         JSONObject bookingDates=new JSONObject();
         bookingDates.put("checkin","2023-02-01");
@@ -40,5 +45,21 @@ public class BaseTest {
         body.put("additionalneeds","Sigara içilen oda");
 
         return body.toString();
+    }
+    protected String createToken(){
+        JSONObject body=new JSONObject();
+        body.put("username","admin");
+        body.put("password","password123");
+
+        Response response=given()
+                .contentType(ContentType.JSON)
+                .when()
+                .body(body.toString())
+                .log().all()
+                .post("https://restful-booker.herokuapp.com/auth");
+
+        response.prettyPrint();
+        return response.jsonPath().getJsonObject("token");
+
     }
 }
